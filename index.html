@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Obsidian AI Vault Scaffold</title>
+<meta name="description" content="Reusable Obsidian AI knowledge-base Vault scaffold: standard partitions, frontmatter conventions, day-to-day scripts and scheduled automations. Zero hard-coded personal paths.">
+<style>
+  :root {
+    --bg0: #282828;
+    --bg1: #1d2021;
+    --bg2: #32302f;
+    --fg0: #fbf1c7;
+    --fg1: #ebdbb2;
+    --fg2: #a89984;
+    --gold: #d79921;
+    --gold-bright: #d8a657;
+    --red: #fb4934;
+    --green: #b8bb26;
+    --blue: #83a598;
+    --purple: #d3869b;
+    --font: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg0);
+    color: var(--fg0);
+    font-family: var(--font);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+  .container { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+  header.topbar { background: var(--bg1); border-bottom: 2px solid var(--gold); padding: 14px 0; position: sticky; top: 0; z-index: 10; }
+  .topbar-inner { max-width: 880px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .topbar-brand { font-weight: 700; color: var(--gold-bright); letter-spacing: 0.5px; }
+  .brand-bracket { color: var(--fg2); }
+  .lang-toggle { display: flex; gap: 4px; }
+  .lang-toggle button {
+    background: var(--bg2); color: var(--fg1); border: 1px solid var(--gold);
+    padding: 4px 14px; font-family: var(--font); font-size: 13px; cursor: pointer;
+    border-radius: 3px;
+  }
+  .lang-toggle button.active { background: var(--gold); color: #1d2021; font-weight: 700; }
+  .hero { text-align: center; padding: 56px 0 32px; }
+  .hero h1 { font-size: 34px; color: var(--gold-bright); font-weight: 800; letter-spacing: 1px; }
+  .hero .tagline { margin-top: 16px; color: var(--fg1); font-size: 17px; max-width: 720px; margin-left: auto; margin-right: auto; }
+  .hero .prompt { margin-top: 22px; color: var(--fg2); font-size: 13px; }
+  .prompt .p-dollar { color: var(--green); }
+  .prompt .p-cmd { color: var(--fg1); }
+  .badges { text-align: center; margin: 8px 0 40px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .badge { background: var(--bg1); border: 1px solid var(--fg2); color: var(--fg1); padding: 3px 12px; border-radius: 3px; font-size: 12.5px; }
+  .badge b { color: var(--gold-bright); }
+  section { padding: 22px 0; border-top: 1px dashed #504945; }
+  h2 { color: var(--gold-bright); font-size: 20px; margin-bottom: 16px; letter-spacing: 0.5px; }
+  h2 .arrow { color: var(--fg2); }
+  h3 { color: var(--green); font-size: 15px; margin: 18px 0 8px; }
+  p { color: var(--fg0); margin: 8px 0; }
+  ul, ol { margin: 8px 0 8px 22px; color: var(--fg0); }
+  li { margin: 4px 0; }
+  a { color: var(--blue); text-decoration: none; border-bottom: 1px dotted var(--blue); }
+  a:hover { color: var(--gold-bright); border-bottom-color: var(--gold-bright); }
+  .kv { color: var(--purple); }
+  .fn { color: var(--blue); }
+  code { background: var(--bg1); padding: 2px 6px; border-radius: 3px; color: var(--fg1); font-size: 13px; }
+  pre {
+    background: var(--bg1); border: 1px solid #3c3836; border-left: 3px solid var(--gold);
+    padding: 16px 18px; overflow-x: auto; margin: 12px 0; border-radius: 4px; font-size: 13px; line-height: 1.6;
+  }
+  pre code { background: none; padding: 0; }
+  .comment { color: var(--fg2); }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 13.5px; }
+  th { background: var(--bg1); color: var(--gold-bright); text-align: left; }
+  th, td { border: 1px solid #504945; padding: 8px 12px; }
+  td:first-child { color: var(--fg1); }
+  .warning { background: #3a2e2e; border: 1px solid var(--red); color: var(--fg0); padding: 10px 14px; border-radius: 4px; margin: 12px 0; }
+  .warning b { color: var(--red); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin: 12px 0; }
+  .card { background: var(--bg1); border: 1px solid #3c3836; border-radius: 5px; padding: 14px 16px; }
+  .card .card-title { color: var(--gold-bright); font-weight: 700; margin-bottom: 6px; }
+  footer { text-align: center; color: var(--fg2); padding: 40px 0 50px; border-top: 2px solid var(--gold); margin-top: 30px; font-size: 13px; }
+  footer a { color: var(--fg1); }
+  .hidden { display: none; }
+  @media (max-width: 600px) { .hero h1 { font-size: 26px; } }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-brand"><span class="brand-bracket">&gt;_</span> obsidian-ai-vault-scaffold</div>
+    <div class="lang-toggle">
+      <button id="btn-zh" class="active" onclick="setLang('zh')">简体中文</button>
+      <button id="btn-en" onclick="setLang('en')">English</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="hero">
+    <h1>Obsidian AI Vault Scaffold</h1>
+    <p class="tagline" data-en="A reusable AI knowledge-base Vault scaffold for Obsidian: standard partitioned directories, frontmatter conventions, day-to-day scripts, and scheduled automations." data-zh="一套可复用的 Obsidian AI 知识库 Vault 脚手架：标准分区目录、frontmatter 规范、日常脚本与自动化定时任务。">
+      A reusable AI knowledge-base Vault scaffold for Obsidian: standard partitioned directories, frontmatter conventions, day-to-day scripts, and scheduled automations.
+    </p>
+    <p class="prompt"><span class="p-dollar">$</span> <span class="p-cmd" data-en="git clone .../obsidian-ai-vault-scaffold && open in Obsidian" data-zh="git clone .../obsidian-ai-vault-scaffold && 用 Obsidian 打开即用">git clone .../obsidian-ai-vault-scaffold && open in Obsidian</span></p>
+  </div>
+  <div class="badges">
+    <span class="badge"><b>license</b> MIT</span>
+    <span class="badge"><b>python</b> 3.11+</span>
+    <span class="badge"><b>shell</b> bash 3.2+</span>
+    <span class="badge"><b>for</b> Obsidian</span>
+  </div>
+
+  <section>
+    <h2><span class="arrow">#</span> <span data-en="Core Concepts" data-zh="核心概念">Core Concepts</span></h2>
+    <ul>
+      <li data-en="Two-digit space-prefixed partitions for ordering (00 inbox → 99 attachments); 70-System uses 70.XX-category sub-layers leaning toward docs/conventions at higher numbers." data-zh="两位数空格前缀分区用于排序（00 收集 → 99 附件）；70-System 下设 70.XX-类别子层，数字越大越偏文档/规范。">Two-digit space-prefixed partitions for ordering (00 inbox → 99 attachments); 70-System uses 70.XX-category sub-layers leaning toward docs/conventions at higher numbers.</li>
+      <li data-en="Repo is a Vault: clone-and-open; scripts live in their conventional run locations; every path is injected via OBSIDIAN_VAULT_DIR with a cwd fallback." data-zh="仓库即 Vault：clone 打开即用，脚本位于规范位置；所有路径经 OBSIDIAN_VAULT_DIR 注入，未设置时回退当前目录。">Repo is a Vault: clone-and-open; scripts live in their conventional run locations; every path is injected via OBSIDIAN_VAULT_DIR with a cwd fallback.</li>
+      <li data-en="Non-destructive automation: scanners report only; add-frontmatter adds without overwriting; inbox normalization is idempotent via state.json." data-zh="非破坏性自动化：巡检只报告；add-frontmatter 只加不覆盖；inbox 规范化用 state.json 保证幂等。">Non-destructive automation: scanners report only; add-frontmatter adds without overwriting; inbox normalization is idempotent via state.json.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="arrow">#</span> <span data-en="Features" data-zh="功能特性">Features</span></h2>
+    <div class="grid">
+      <div class="card"><div class="card-title">📂 Partitions</div><span data-en="15 clearly scoped directories with frontmatter conventions." data-zh="15 个职责清晰的分区 + frontmatter 规范。">15 clearly scoped directories with frontmatter conventions.</span></div>
+      <div class="card"><div class="card-title">🛠 Scripts</div><span data-en="new-note, add-frontmatter, html-to-md, archive-url; standard library first." data-zh="new-note / add-frontmatter / html-to-md / archive-url，标准库优先。">new-note, add-frontmatter, html-to-md, archive-url; standard library first.</span></div>
+      <div class="card"><div class="card-title">⏰ Automations</div><span data-en="Daily briefing, inbox normalization, timesheets, weekly review, P0/P1 reminders." data-zh="每日驾驶舱、Inbox 规范化、工时、周复盘、P0/P1 提醒。">Daily briefing, inbox normalization, timesheets, weekly review, P0/P1 reminders.</span></div>
+      <div class="card"><div class="card-title">🧠 LLM Wiki</div><span data-en="Thin-interface placeholder; compile delegates to llm-wiki-knowledge-vault." data-zh="薄接口占位，编译对接 llm-wiki-knowledge-vault 独立仓库。">Thin-interface placeholder; compile delegates to llm-wiki-knowledge-vault.</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="arrow">#</span> <span data-en="Quick Start" data-zh="快速开始">Quick Start</span></h2>
+    <h3 data-en="Initialize into a fresh Vault" data-zh="初始化成新的独立 Vault">Initialize into a fresh Vault</h3>
+    <pre><code>$ git clone https://github.com/xsoway/obsidian-ai-vault-scaffold.git
+$ cd obsidian-ai-vault-scaffold
+$ ./initialize.sh /path/to/your-new-vault</code></pre>
+    <h3 data-en="Use the repo directly as a Vault" data-zh="直接当 Vault 用">Use the repo directly as a Vault</h3>
+    <pre><code>$ export OBSIDIAN_VAULT_DIR=/abs/path/to/this/vault
+$ python3 70-System/70.03-Scripts/scripts/new-note.py --kind learning --title "My first note"</code></pre>
+    <div class="warning"><b>!</b> <span data-en="No hard-coded personal paths. Scripts read OBSIDIAN_VAULT_DIR, falling back to the current directory." data-zh="无任何硬编码个人路径。脚本从 OBSIDIAN_VAULT_DIR 读取 vault 根，未设置时回退当前目录。">No hard-coded personal paths. Scripts read OBSIDIAN_VAULT_DIR, falling back to the current directory.</span></div>
+  </section>
+
+  <section>
+    <h2><span class="arrow">#</span> <span data-en="Why" data-zh="为什么需要">Why</span></h2>
+    <table>
+      <thead>
+        <tr><th data-en="Pain point" data-zh="痛点">Pain point</th><th data-en="Alternative downside" data-zh="替代方案劣势">Alternative downside</th><th data-en="This scaffold" data-zh="本脚手架优势">This scaffold</th></tr>
+      </thead>
+      <tbody>
+        <tr><td data-en="Notes get messy" data-zh="笔记越积越乱">Notes get messy</td><td data-en="Manual filing, loses control as content grows" data-zh="手工归档，随内容增长很快失控">Manual filing, loses control as content grows</td><td data-en="15 scoped partitions + frontmatter from the start" data-zh="一进来就有 15 个分区 + frontmatter 规范">15 scoped partitions + frontmatter from the start</td></tr>
+        <tr><td data-en="Repeating daily chores" data-zh="每天重复建笔记/记工时">Repeating daily chores</td><td data-en="Scattered non-parameterized scripts" data-zh="模板脚本散落、无参数化">Scattered non-parameterized scripts</td><td data-en="Standard-library-first, OBSIDIAN_VAULT_DIR parameterized" data-zh="标准库优先，OBSIDIAN_VAULT_DIR 参数化">Standard-library-first, OBSIDIAN_VAULT_DIR parameterized</td></tr>
+        <tr><td data-en="Full-auto pipeline" data-zh="想全自动日常流水线">Full-auto pipeline</td><td data-en="Hand-written crons, no logs/idempotency" data-zh="手动 cron，无日志、无幂等">Hand-written crons, no logs/idempotency</td><td data-en="Ready cron/launchd templates + structured logs" data-zh="现成 cron/launchd 模板 + 结构化日志">Ready cron/launchd templates + structured logs</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2><span class="arrow">#</span> <span data-en="Scheduled Tasks" data-zh="定时任务">Scheduled Tasks</span></h2>
+    <pre><code><span class="comment"># daily 09:00 — briefing</span>
+0 9 * * * OBSIDIAN_VAULT_DIR="$VAULT" /bin/zsh "$AUTODIR/run-daily-brief.sh"
+<span class="comment"># daily 09:05 — inbox normalization</span>
+5 9 * * * OBSIDIAN_VAULT_DIR="$VAULT" "$PYTHON" "$AUTODIR/inbox_auto_normalize.py"
+<span class="comment"># Sunday 18:00 — weekly review</span>
+0 18 * * 0 OBSIDIAN_VAULT_DIR="$VAULT" /bin/zsh "$AUTODIR/run-weekly-review-only.sh"</code></pre>
+    <p><span data-en="Full cron + launchd examples:" data-zh="完整 cron 与 launchd 示例见：">Full cron + launchd examples:</span> <a href="docs/guides/timers.md" data-en="docs/guides/timers.md" data-zh="docs/guides/timers.md">docs/guides/timers.md</a></p>
+  </section>
+
+  <section>
+    <h2><span class="arrow">#</span> <span data-en="Repository" data-zh="仓库">Repository</span></h2>
+    <p><span data-en="Full bilingual README on GitHub:" data-zh="完整中英双语 README 见 GitHub：">Full bilingual README on GitHub:</span> <a href="https://github.com/xsoway/obsidian-ai-vault-scaffold">github.com/xsoway/obsidian-ai-vault-scaffold</a></p>
+    <ul>
+      <li data-en="English README" data-zh="英文版：README.md">English README: <code>README.md</code></li>
+      <li data-en="中文 README" data-zh="中文版：README.zh-CN.md">中文 README: <code>README.zh-CN.md</code></li>
+      <li data-en="MIT license" data-zh="MIT 许可证">MIT license: <code>LICENSE</code></li>
+    </ul>
+  </section>
+
+  <footer>
+    <p data-en="© 2026 Obsidian AI Vault Scaffold · MIT · Maintained by Alan Hsu" data-zh="© 2026 Obsidian AI Vault Scaffold · MIT · 维护者 Alan Hsu">© 2026 Obsidian AI Vault Scaffold · MIT · Maintained by Alan Hsu</p>
+  </footer>
+</div>
+
+<script>
+  function setLang(lang) {
+    document.documentElement.lang = (lang === 'zh') ? 'zh-CN' : 'en';
+    document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    document.querySelectorAll('[data-en]').forEach(function (el) {
+      if (lang === 'zh' && el.getAttribute('data-zh')) {
+        el.textContent = el.getAttribute('data-zh');
+      } else if (lang === 'en' && el.getAttribute('data-en')) {
+        el.textContent = el.getAttribute('data-en');
+      }
+    });
+  }
+</script>
+</body>
+</html>
