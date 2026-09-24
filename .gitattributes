@@ -1,0 +1,12 @@
+# 统一行尾，跨平台一致
+* text=auto eol=lf
+
+# 二进制文件不做文本归一化
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.zip binary
+*.tar binary
+*.gz binary

@@ -1,0 +1,48 @@
+# ============================================================
+# Vault 定时任务模板 (cron)
+# 复制并替换 <VAULT> 为你的 vault 绝对路径，然后：
+#   crontab -e  粘贴；或  crontab 70-System/70.05-Configs/templates/cron.template
+# ============================================================
+
+SHELL=/bin/zsh
+PATH=/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin
+HOME=/Users/<you>
+
+# Python 运行时：macOS 建议 homebrew 的 3.13（系统框架版 python3 可能静默失败）
+PYTHON=${OBSIDIAN_PYTHON:-/opt/homebrew/bin/python3.13}
+
+# Vault 根目录（替换为你自己的路径）
+VAULT=<VAULT>
+AUTODIR=${VAULT}/70-System/70.04-Tools/automations
+LOGDIR=${VAULT}/70-System/70.06-Workflows/automation-runtime/logs
+WIKIDIR=${VAULT}/71-Wiki
+WIKILOGDIR=${VAULT}/71-Wiki/71-03-output
+
+# --------------------------
+# 每日任务
+# --------------------------
+
+# 每日驾驶舱 - 09:00
+0 9 * * * OBSIDIAN_VAULT_DIR="$VAULT" /bin/zsh "$AUTODIR/run-daily-brief.sh" >> "$LOGDIR/cron-daily-brief.log" 2>&1
+
+# Inbox 自动规范化 - 09:05
+5 9 * * * OBSIDIAN_VAULT_DIR="$VAULT" "$PYTHON" "$AUTODIR/inbox_auto_normalize.py" >> "$LOGDIR/cron-inbox-normalize.log" 2>&1
+
+# Brain 待办推送到提醒 - 09:10（可选，依赖 remindctl/Apple Reminders）
+10 9 * * * OBSIDIAN_VAULT_DIR="$VAULT" "$PYTHON" "$AUTODIR/brain_to_reminders.py" >> "$LOGDIR/cron-brain-to-reminders.log" 2>&1
+
+# 每日工时记录 - 18:10（可选）
+10 18 * * * OBSIDIAN_VAULT_DIR="$VAULT" /bin/zsh "$AUTODIR/run-daily-timesheet.sh" >> "$LOGDIR/cron-daily-timesheet.log" 2>&1
+
+# 71-Wiki 增量编译 - 09:15 / 18:15（可选，需先接入 wiki 子系统）
+15 9,18 * * * cd "$WIKIDIR" && "$PYTHON" 71-04-scripts/wiki-compile.py >> "$WIKILOGDIR/cron.log" 2>&1
+
+# --------------------------
+# 每周任务
+# --------------------------
+
+# 71-Wiki 每周体检 - 周一 09:20（可选）
+20 9 * * 1 cd "$WIKIDIR" && "$PYTHON" 71-04-scripts/wiki-lint.py >> "$WIKILOGDIR/cron-lint.log" 2>&1
+
+# 周复盘 - 周日 18:00
+0 18 * * 0 OBSIDIAN_VAULT_DIR="$VAULT" /bin/zsh "$AUTODIR/run-weekly-review-only.sh" >> "$LOGDIR/cron-weekly-review.log" 2>&1

@@ -1,0 +1,39 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# --- 脚手架运行时产物（初始化/编译后本地生成） ---
+*.log
+.DS_Store
+node_modules/
+
+# --- 生成产污（若作为实际 vault 使用） ---
+# 由 initialize.sh 生成的实际配置
+vault.env
+
+# 本地编辑/备份
+*.bak
+*.tmp
+*.swp
+*~
+
+# --- 默认不提交目录（若把它当 vault 用） ---
+# 71-Wiki 编译产物 / 运行时状态默认不提交
+71-02-wiki/*
+71-03-output/*
+71-01-raw/*
+# 但保留骨架占位文件
+!71-02-wiki/.gitkeep
+!71-03-output/.gitkeep
+!71-01-raw/.gitkeep
+
+# Obsidian
+.obsidian/
+.obsidian/*
+!.obsidian/.gitkeep
+
+# 私有 / 敏感
+.env
+*.pem
+*.key

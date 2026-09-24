@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  macOS launchd 定时任务模板（可选，替代 cron）。
+  用途示例：每天 20:00 自动执行某个 vault 脚本（如 git 同步 / wiki 编译）。
+  使用：
+    1. 把 <SCRIPT_ABS_PATH> 换成你的脚本绝对路径
+    2. 把 com.example.obsidian-vault.job 换成你的唯一 Label
+    3. cp 到 ~/Library/LaunchAgents/
+    4. launchctl load ~/Library/LaunchAgents/com.example.obsidian-vault.job.plist
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.example.obsidian-vault.job</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>/Users/<you>/<vault>/70-System/70.04-Tools/automations/run-daily-brief.sh</string>
+  </array>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>OBSIDIAN_VAULT_DIR</key>
+    <string>/Users/<you>/<vault></string>
+  </dict>
+
+  <!-- 每天 20:00 -->
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>20</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+
+  <key>RunAtLoad</key>
+  <false/>
+
+  <key>StandardOutPath</key>
+  <string>/Users/<you>/<vault>/70-System/70.06-Workflows/automation-runtime/logs/job.stdout.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/<you>/<vault>/70-System/70.06-Workflows/automation-runtime/logs/job.stderr.log</string>
+</dict>
+</plist>
